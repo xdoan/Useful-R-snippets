@@ -1,9 +1,12 @@
-# Testing 
+### xdoan
+### useful functions and commands
 
 
-
-#function to plot avg cov
-plot_avg_cov <- function(df){
+##-----------------------------------------------##
+## 1 
+## function to barplot by chr for one dataframe 
+##-----------------------------------------------##
+plot_bar_chr <- function(df){
   ### load libraries
   library(ggplot2)
   
@@ -42,10 +45,14 @@ plot_avg_cov <- function(df){
   ggplot(df, aes(chr, df[,4] )) +geom_bar(stat = "identity") + ylab("average coverage")
 }
 ###e.g.
-#plot_avg_cov(norm_avg_cov) + ggtitle("normal1 avg cov")
+plot_bar_chr(norm_avg_cov) + ggtitle("normal1 avg cov")
 
-#function to plot avg cov for two dataframes (e.g. Tumor/Normal in same individual)
-paired_avg_cov <- function(df1, df2){
+##-----------------------------------------------##
+## 2 
+## #function to barplot by chromosome for two dataframes 
+## (e.g. Tumor/Normal in same individual)
+##-----------------------------------------------##
+paired_bar_chr <- function(df1, df2){
   ### load libraries
   library(cowplot)
   library(ggplot2)
@@ -118,4 +125,23 @@ paired_avg_cov <- function(df1, df2){
   plot_grid(p1, p2, align='h', labels=c('N', 'T'))
 }
 ### example:
-# paired_avg_cov(norm_avg_cov,tumor_avg_cov) + ggtitle("Sample #1 avg coverage")
+paired_bar_chr(norm_avg_cov,tumor_avg_cov) + ggtitle("Sample #1 avg coverage")
+
+##-----------------------------------------------##
+## 2 
+## Split a dataframe by chromosomes 
+## Get normalized counts by chromosome
+## Merge dataframe, delete split vector of df 
+##-----------------------------------------------##
+normalized_counts <- function(df_all_chr, df_avg_coverage){
+  by_chr <- split (df_all_chr, df_all_chr$chr)
+
+  for(i in seq_along(by_chr)){
+    counts <- (getElement(by_chr[[i]], "counts"))
+    norm_c <- counts/df_avg_coverage[i,4]
+    by_chr[[i]] <- as.data.frame(by_chr[[i]])
+    by_chr[[i]]$norm_counts <- norm_c
+    }
+  df_all_chr <- unsplit(by_chr, f=df$chr)
+  rm(by_chr)
+}

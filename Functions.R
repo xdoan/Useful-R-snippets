@@ -128,7 +128,7 @@ paired_bar_chr <- function(df1, df2){
 paired_bar_chr(norm_avg_cov,tumor_avg_cov) + ggtitle("Sample #1 avg coverage")
 
 ##-----------------------------------------------##
-## 2 
+## 3
 ## Split a dataframe by chromosomes 
 ## Get normalized counts by chromosome
 ## Merge dataframe, delete split vector of df 

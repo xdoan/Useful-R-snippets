@@ -145,3 +145,36 @@ normalized_counts <- function(df_all_chr, df_avg_coverage){
   df_all_chr <- unsplit(by_chr, f=df$chr)
   rm(by_chr)
 }
+
+##-----------------------------------------------##
+## 4
+## Facets a jitter plot by chromosome 
+## draws colors over the facet grid label that matches the chromosome color
+## Custon theme to decrease the lines on the plot but keep some, since there are lots of chromosomes
+##-----------------------------------------------##
+g <- ggplot(all_innerjoin, aes(x = chr , y = difference, color=chr)) +
+  geom_jitter(aes(alpha=.5)) + theme(axis.text=element_text(size=12), axis.title = element_text(size=15), plot.title = element_text(size=20), axis.text.x = element_text(angle = 90, hjust = 1), 
+  panel.background = element_rect(fill = "white",
+                                colour = "white",
+                                size = 1, linetype = "solid"),
+  panel.grid.major.x = element_blank(),
+  panel.grid.major.y = element_line(size = 0.5, linetype = 'solid',
+                                colour = "gray95"),
+  panel.grid.minor = element_line(size = 0.25, linetype = 'solid',
+                                colour = "gray95") )  + 
+  scale_color_manual(values=c("#01953b", "#f67bff", "#39e270", "#db31b0", "#557100", "#9d67f2", "#b76700", "#1749bb", "#b70d02", "#28caff", "#fc257a", "#02aea1", "#ff5a62", "#0090c7", "#ff9a6c", "#648dff", "#e1c286", "#0162b8", "#80d6bd", "#ff63ad", "#545182", "#ffaca8", "#922372", "#ddb4ff") ) + scale_alpha(guide = 'none') + ggtitle("Pooled Difference in Head and Neck Cancer Patients") + ylab("Difference (T-N)") + xlab("Array") + facet_grid(.~chr, scale = "free",space = "free_x") + guides(colour=FALSE) 
+
+g <- ggplot_gtable(ggplot_build(g))
+
+strip_t <- which(grepl('strip-t', g$layout$name))
+#make sure they match the scale_color_manual values!
+fills <- c("#01953b", "#f67bff", "#39e270", "#db31b0", "#557100", "#9d67f2", "#b76700", "#1749bb", "#b70d02", "#28caff", "#fc257a", "#02aea1", "#ff5a62", "#0090c7", "#ff9a6c", "#648dff", "#e1c286", "#0162b8", "#80d6bd", "#ff63ad", "#545182", "#ffaca8", "#922372", "#ddb4ff")
+k <- 1
+
+for (i in strip_t) {
+j <- which(grepl('rect', g$grobs[[i]]$grobs[[1]]$childrenOrder))
+g$grobs[[i]]$grobs[[1]]$children[[j]]$gp$fill <- fills[k]
+k <- k+1
+}
+grid.newpage()
+grid.draw(g)

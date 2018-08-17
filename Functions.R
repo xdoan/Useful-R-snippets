@@ -151,6 +151,7 @@ normalized_counts <- function(df_all_chr, df_avg_coverage){
 ## Facets a jitter plot by chromosome 
 ## draws colors over the facet grid label that matches the chromosome color
 ## Custon theme to decrease the lines on the plot but keep some, since there are lots of chromosomes
+## base code taken from this issue thread https://github.com/tidyverse/ggplot2/issues/2096
 ##-----------------------------------------------##
 g <- ggplot(all_innerjoin, aes(x = chr , y = difference, color=chr)) +
   geom_jitter(aes(alpha=.5)) + theme(axis.text=element_text(size=12), axis.title = element_text(size=15), plot.title = element_text(size=20), axis.text.x = element_text(angle = 90, hjust = 1), 
